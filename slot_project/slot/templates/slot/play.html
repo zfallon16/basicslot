@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'slot/style.css' %}">
+  <title>Slot Machine</title>
+</head>
+<body>
+  <div class="slot-machine {% if is_win %}win{% endif %}">
+    <div class="nav">
+      {% if user.is_authenticated %}
+        <span>Balance: {{ balance }}</span>
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'signup' %}">Sign Up</a>
+      {% endif %}
+    </div>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% else %}
+      <h1>Slot Machine</h1>
+      <div class="reels">
+        <span class="reel">{{ reels.0 }}</span>
+        <span class="reel">{{ reels.1 }}</span>
+        <span class="reel">{{ reels.2 }}</span>
+      </div>
+      <p class="payout">Your payout: {{ payout }}</p>
+      <form method="get">
+        <label for="bet-select">Bet per spin:</label>
+        <select name="bet" id="bet-select">
+            {% for option in bets %}
+                <option value="{{ option }}" {% if option == bet %}selected{% endif %}>
+                    {{ option }} credit{% if option > 1 %}s{% endif %}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="spin-btn">Spin Again</button>
+      </form>
+    {% endif %}
+  </div>
+</body>
+</html>
